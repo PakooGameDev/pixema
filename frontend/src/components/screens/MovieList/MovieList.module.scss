@@ -1,0 +1,29 @@
+@import "../../../assets/styles/mixins";
+
+.movies__container{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    overflow-y: auto;
+    margin-bottom:64px;
+
+    &_list {     
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+        gap: 40px;  
+        margin-bottom: 64px;     
+    }
+        
+        @include mobile {
+            &_list {  
+                margin-top: 100px;   
+                grid-template-columns: repeat(2, 1fr);   
+            }  
+        }
+        @include small-mobile {
+            &_list {  
+                grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));   
+            }  
+        }
+}
+

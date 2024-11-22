@@ -1,0 +1,25 @@
+// базовые подключения
+@import "vars";
+@import "mixins";
+@import "fonts";
+@import "settings";
+
+.light-theme {
+    --BackgroundColor: #FFFFFF;
+    --Graphite: #AFB2B6;
+    --Search: #FFFFFF;
+    --Dark: #d8d8d8;
+    --Primary: #7B61FF;
+    --PrimaryLight: #917CFF;
+    --TextColorWhite:#3f3d3d;
+    --TextColorLight:#686868;
+    --Error:#FF5154;
+    --RatingGreen:#00A340;
+    --RatingYellow:#F3A608;
+    --RatingOrange:#F45D2D;
+}
+
+// подключения компонентов страницы
+body{
+    font-family: 'Exo 2', sans-serif;
+}

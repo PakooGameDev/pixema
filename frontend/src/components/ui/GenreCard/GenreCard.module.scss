@@ -1,0 +1,12 @@
+.card {
+    background-color: var(--Dark);
+    border-radius: 6px;
+    padding: 4px 8px;   
+    display: flex;
+    align-items: center;
+    &__close {
+        margin-left: 5px;
+        cursor: pointer;
+        color: var(--TextColorLight);
+    }
+}
