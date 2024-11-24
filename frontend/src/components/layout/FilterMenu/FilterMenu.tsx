@@ -19,6 +19,7 @@ const FilterMenu: React.FC<FilterMenuProps> = observer(({ isOpen = true, onClose
     const [genre, setGenre] = useState<string[]>([]);
     const [years, setYears] = useState<[string | null, string | null]>([null, null]);
     const [ratings, setRatings] = useState<[string | null, string | null]>([null, null]);
+    const [sortBy, setSortBy] = useState('rating'); // Добавьте состояние сортировки
 
     const handleShowResults = () => {
         // Обновляем фильтры в хранилище
@@ -28,7 +29,9 @@ const FilterMenu: React.FC<FilterMenuProps> = observer(({ isOpen = true, onClose
             country,
             years,
             ratings,
+            sortBy, // Добавьте это свойство
         });
+        movieStore.filterMovies(); // Не забудьте вызвать фильтрацию
         onClose && onClose(); // Закрываем меню фильтров после получения результатов
     };
 
@@ -39,7 +42,13 @@ const FilterMenu: React.FC<FilterMenuProps> = observer(({ isOpen = true, onClose
                     <h2>Filters</h2>
                     <button className={styles.filter__container_close} onClick={onClose}>✖</button>
                 </div>
-                <Switcher className={styles.filter__container_sort} label='Sort by' buttons={{ firstBtn: 'rating', secondBtn: 'years' }} />
+                <Switcher 
+                    className={styles.filter__container_sort} 
+                    label='Sort by' 
+                    buttons={{ firstBtn: 'rating', secondBtn: 'years' }} 
+                    activeButton={sortBy} // Передайте текущее состояние сортировки
+                    onSortChange={setSortBy} // Передайте функцию для обновления состояния сортировки
+                />
                 <div className={styles.filter__container_fields}>
                     <Input placeholder="Your text" className={styles.filter__container_search} label="Full or short movie name" type="text" value={movie} onChange={(e) => setMovie(e.target.value)} />
                     <Selector label='Country' value={country} onChange={setCountry} />

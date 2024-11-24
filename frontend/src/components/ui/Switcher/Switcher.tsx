@@ -6,32 +6,30 @@ interface ButtonsProps {
     secondBtn: string;
 }
 
+
 interface SwitcherProps {
   label?: string;
   buttons: ButtonsProps;
   className?: string;
+  activeButton: string; // Добавьте это свойство
+  onSortChange: (value: string) => void; // Добавьте это свойство
 }
-
-const Switcher: React.FC<SwitcherProps> = ({ label,buttons,className }) => {
-  const [activeButton, setActiveButton] = useState('a');
-
-  const handleButtonClick = (buttonValue: string) => {
-    setActiveButton(buttonValue);
-  };
-
+const Switcher: React.FC<SwitcherProps> = ({ label, buttons, className, activeButton, onSortChange }) => {
   return (
     <div className={`${styles.switcher} ${className}`}>
-       {label && <label className={styles.switcher__label}>{label}</label>}
+      {label && <label className={styles.switcher__label}>{label}</label>}
       <div className={styles.switcher__buttons}>
         <button
-          className={activeButton === 'a'? `${styles.switcher__buttons_btn} ${styles.active}` : styles.switcher__buttons_btn}
-          onClick={() => handleButtonClick('a')}
-        >{buttons.firstBtn}
+          className={activeButton === 'rating' ? `${styles.switcher__buttons_btn} ${styles.active}` : styles.switcher__buttons_btn}
+          onClick={() => onSortChange('rating')} // Обновите обработчик
+        >
+          {buttons.firstBtn}
         </button>
         <button
-          className={activeButton === 'b'? `${styles.switcher__buttons_btn} ${styles.active}` : styles.switcher__buttons_btn}
-          onClick={() => handleButtonClick('b')}
-        >{buttons.secondBtn}
+          className={activeButton === 'years' ? `${styles.switcher__buttons_btn} ${styles.active}` : styles.switcher__buttons_btn}
+          onClick={() => onSortChange('years')} // Обновите обработчик
+        >
+          {buttons.secondBtn}
         </button>
       </div>
     </div>

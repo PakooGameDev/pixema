@@ -30,10 +30,8 @@ class AuthController extends Controller
         } catch (\Throwable $e) {
             return response()->json(['error' =>  $e->getMessage()], 500);
         } catch (ValidationException $e) {
-            Log::error('Validation error during registration: ' . $e->getMessage(), ['errors' => $e->errors()]);
             return response()->json(['error' => 'Validation failed', 'errors' => $e->errors()], 422);
         } catch (QueryException $e) {
-            Log::error('Database error during registration: '. $e->getMessage(), ['trace' => $e->getTrace()]);
             return response()->json(['error' => 'Database error'], 500);
         }              
     }
@@ -142,38 +140,20 @@ class AuthController extends Controller
 
     public function updateUserData(Request $request)
     {
-        try {
-            $authorizationHeader = $request->header('Authorization');
+            $authorizedUser = $request->attributes->get('user');
             
-            // Проверяем, что заголовок существует и начинается с "Bearer "
-            if ($authorizationHeader && preg_match('/Bearer\s(\S+)/', $authorizationHeader, $matches)) {
-                $token = $matches[1]; // Токен будет в matches[1]
-
-            } else {
-                return response()->json(['error' => 'Token not provided'], 401);
-            }
-
-            $userData = TokenService::validateAccessToken($token);
-            if (!$userData) {
-                return response()->json(['error' => 'Invalid token'], 401);
-            }
-            $userId = $userData->data->id; 
-            $user = User::find($userId);
+            $userInDB = User::find($authorizedUser->data->id);
 
             // Обновляем имя, если оно передано
             if ($request->has('name')) {
-                $request->validate([
-                    'name' => ['nullable','string', 'max:255'],
-                ]);
-                $userData = UserService::updateName($user, $request->name);
+                $request->validate(['name' => ['nullable','string', 'max:255'],]);
+                $userData = UserService::updateName($userInDB, $request->name);
             }
 
             // Обновляем email, если он передан
             if ($request->has('email')) {
-                $request->validate([
-                    'email' => ['nullable','string', 'email', 'max:255', 'unique:users'],
-                ]);
-                $userData = UserService::updateEmail($user, $request->email);
+                $request->validate(['email' => ['nullable','string', 'email', 'max:255', 'unique:users'],]);
+                $userData = UserService::updateEmail($userInDB, $request->email);
             }
 
             // Обновляем пароль, если новое значение пароля передано
@@ -183,12 +163,18 @@ class AuthController extends Controller
                     'newPassword' => 'nullable|string|min:8', 
                     'newPassword_c' => 'required_with:newPassword|nullable|string|same:newPassword', 
                 ]);
-                $userData = UserService::updatePasswordFromPage($user, $request->currentPassword, $request->newPassword);
+                $userData = UserService::updatePasswordFromPage($userInDB, $request->currentPassword, $request->newPassword);
             }
 
             return response()->json($userData, 200)->withCookie(cookie('refreshToken', $userData['refreshToken'], 60 * 24 * 7, null, null, null, true, false, null));
-        } catch(\Throwable $e) {
-            return response()->json(['error' =>  $e->getMessage()], 500);
-        }
+    }
+
+    public function getUserName(Request $request)
+    {
+            $authorizedUser = $request->attributes->get('user');
+            
+            $userInDB = User::find($authorizedUser->data->id);
+
+            return response()->json($userInDB->name, 200);
     }
 }

@@ -4,7 +4,7 @@ import styles from './SignIn.module.scss';
 import Input from '../Input/Input';
 import { Link } from 'react-router-dom';
 import { Context } from '../../../index';
-
+import { observer } from 'mobx-react-lite';
 
 const SignIn: React.FC = () => {
     const [email, setEmail] = useState('');
@@ -13,13 +13,13 @@ const SignIn: React.FC = () => {
     const navigate = useNavigate();
 
     const {store} = useContext(Context);
-
-    const handleLogin = () =>{
- 
-        console.log(store.user.isActivated,store.user)
-      
-        store.login(email, password)
-        navigate('/')
+    const handleLogin = async () => {
+        await store.login(email, password); // Ждем завершения метода login
+        if (store.isAuth) {
+            navigate('/'); // Перенаправляем пользователя, если он авторизован
+        } else {
+            console.log('не авторизован');
+        }
     }
 
 
@@ -52,5 +52,5 @@ const SignIn: React.FC = () => {
     );
 };
 
-export default SignIn;
+export default observer(SignIn);
 

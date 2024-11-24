@@ -4,18 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Movie;
-use Illuminate\Validation\ValidationException;
+use App\Models\Trend;
+use App\Models\UserMovie;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Database\QueryException;
-
-
 
 class MovieController extends Controller
 {
     public function getMovies()
     {
         try {
-            $movies = Movie::all(); // Получаем все фильмы из базы данных
+            $movies = Movie::inRandomOrder()->get(); // Получаем все фильмы в случайном порядке
             return response()->json($movies, 200); // Возвращаем фильмы в формате JSON с кодом 200
         } catch (\Exception $e) {
             return response()->json(['error' => 'Unable to fetch movies.'], 500); // Обработка ошибок
@@ -31,6 +29,22 @@ class MovieController extends Controller
 
         try {
             $movie = Movie::findOrFail($request->id); // Получаем фильм по ID
+
+            $trend = Trend::where('movie_id', $request->id)->first();
+
+            if ($trend) {
+                $trend->increment('current_views'); // Увеличиваем current_views на 1
+            } else {
+                // Если запись в таблице trends не найдена, можно создать новую
+                Trend::create([
+                    'movie_id' => $request->id,
+                    'current_views' => 1,
+                    'previous_views' => 0, // Или другое значение по умолчанию
+                    'trend_score' => 0, // Или другое значение по умолчанию
+                ]);
+            }
+            $trend->save(); // Сохраняем изменения
+
             return response()->json($movie, 200); // Возвращаем фильм в формате JSON с кодом 200
         } catch (\Exception $e) {
             return response()->json(['error' => 'Movie not found.'], 404); // Обработка ошибок
@@ -129,4 +143,48 @@ class MovieController extends Controller
     
         return response()->json($movies);
     }
+
+    public function fetchFavorites (Request $request)
+    {
+        // Получаем авторизованного пользователя
+        $user = $request->attributes->get('user');
+    
+        // Извлекаем фильмы из библиотеки пользователя
+        $userMovies = UserMovie::where('user_id', $user->data->id)->with('movie')->get();
+    
+        // Формируем массив фильмов
+        $movies = $userMovies->map(function ($userMovie) {
+            return $userMovie->movie; // Возвращаем только фильмы
+        });
+    
+        return response()->json($movies, 200);
+    }
+
+    public function toggleFavorite(Request $request, $movieId)
+    {
+        // Получаем авторизованного пользователя из атрибутов запроса
+        $user = $request->attributes->get('user');
+        // Проверяем, существует ли фильм
+        $movie = Movie::find($movieId);
+        if (!$movie) {
+            return response()->json(['error' => 'Movie not found.'], 404);
+        }
+        
+        // Проверяем, есть ли фильм в библиотеке пользователя
+        $userMovie = UserMovie::where('user_id', $user->data->id)->where('movie_id', $movieId)->first();
+        
+        if ($userMovie) {
+            // Если фильм уже в библиотеке, удаляем его
+            $userMovie->delete();
+            return response()->json(['message' => 'Movie removed from favorites.'], 200);
+        } else {
+            // Если фильма нет в библиотеке, добавляем его
+            UserMovie::create([
+                'user_id' => $user->data->id,
+                'movie_id' => $movieId,
+            ]);
+            return response()->json(['message' => 'Movie added to favorites.'], 201);
+        }
+    }
+
 }

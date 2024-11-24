@@ -8,6 +8,18 @@ export default class MovieService {
         return $api.get<IMovie[]>('/movies')
     }
 
+    static fetchTrendingMovies(): Promise<AxiosResponse<IMovie[]>> {
+        return $api.get<IMovie[]>('/movies/trends')
+    }
+
+    static fetchFavoritesMovies(): Promise<AxiosResponse<IMovie[]>> {
+        return $api.get<IMovie[]>('/movies/favorites')
+    }
+
+    static toggleFavorite(id: string | number): Promise<AxiosResponse<IMovie>> {
+        return $api.post<IMovie>(`/movies/toggle-favorites/${id}`);
+    }
+
     static fetchMovieById(id:string|number): Promise<AxiosResponse<IMovie>> {
         return $api.post<IMovie>('/movie', {id})
     }

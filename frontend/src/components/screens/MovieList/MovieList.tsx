@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite';
 import MovieCard from '../../ui/MovieCard/MovieCard';
 import Loader from '../../ui/Loader/Loader';
 import styles from './MovieList.module.scss';
-import { movieStore } from '../../../store/MovieStore'; // Импортируйте ваше хранилище
+import { movieStore } from '../../../store/MovieStore';
 
 interface MovieListProps {
   type: string;
@@ -11,16 +11,26 @@ interface MovieListProps {
 
 const MovieList: React.FC<MovieListProps> = observer(({ type }) => {
   useEffect(() => {
-    // Получаем фильмы при монтировании компонента
-    movieStore.fetchMovies();
-  }, []);
+    if (type === 'trends') {
+      movieStore.fetchTrendingMovies(); 
+    } else if (type === 'homes') {
+      movieStore.fetchMovies(); 
+    } else if (type === 'favorites') {
+      movieStore.fetchFavoritesMovies();
+    }
+  }, [type]);
 
-  // Вызываем фильтрацию, если фильтры изменяются
+
   useEffect(() => {
     if (movieStore.filters.title || movieStore.filters.genre || movieStore.filters.country) {
       movieStore.filterMovies();
     }
-  }, [movieStore.filters]);
+  }, []);  // необходимо рендерить обычные фильмы, если поисковые запросы пусты или переходим в другие вкладки
+
+
+  const filteredMovies = movieStore.movies.filter(movie =>
+    movie.title.toLowerCase().includes(movieStore.searchTerm.toLowerCase())
+  );
 
   return (
     <div className={styles.movies__container}>
@@ -28,7 +38,7 @@ const MovieList: React.FC<MovieListProps> = observer(({ type }) => {
         <Loader />
       ) : (
         <div className={styles.movies__container_list}>
-          {movieStore.movies.map(movie => (
+          {filteredMovies.map(movie => (
             <MovieCard key={movie.id} data={movie} />
           ))}
         </div>

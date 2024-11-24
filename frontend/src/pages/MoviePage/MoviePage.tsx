@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import MoviePageScreen from '../../components/screens/MoviePage/MoviePage';
 import ContentSection from '../../components/layout/ContentSection/ContentSection';
 import { observer } from 'mobx-react-lite';
@@ -24,6 +24,7 @@ const MoviePage: React.FC = () => {
     genre: 'Comedy',
     poster_image: '',
   });
+  
 
   useEffect(() => {
     if (id) { // Проверяем, что id существует

@@ -6,6 +6,7 @@ import Recommendations from '../../ui/Recommendations/Recommendations';
 import formatDate from '../../../utils/format/FormatDate'
 import formatNumber from '../../../utils/format/FormatNumber'
 import { IMovie } from '../../../models/IMovie';
+import MovieService  from '../../../services/MovieService';
 
 interface MovieProps {
   data: IMovie;
@@ -13,6 +14,18 @@ interface MovieProps {
 }
 
 const MoviePage: React.FC<MovieProps> = ({data, className}) => {
+
+    function handleFavorite() {
+        MovieService.toggleFavorite(data.id)
+            .then(response => {
+                console.log(response.data); // Успешное сообщение
+                // Обновите состояние UI, если необходимо
+            })
+            .catch(error => {
+                console.error(error.response.data.error); // Сообщение об ошибке
+            });
+    }
+
   return (
     <div className={styles.movie}>
       <div className={styles.movie__banner}>
@@ -20,7 +33,7 @@ const MoviePage: React.FC<MovieProps> = ({data, className}) => {
             <img src={data.poster_image} alt={data.title} className={styles.movie__banner_img}></img>
         </div>
         <div className={styles.movie__banner_buttons}>
-            <button className={styles.movie__banner_btn}>
+            <button className={styles.movie__banner_btn} onClick={handleFavorite}>
                 <Favorites className={styles.movie__banner_icon}/>
             </button>
             <button className={styles.movie__banner_btn}>
