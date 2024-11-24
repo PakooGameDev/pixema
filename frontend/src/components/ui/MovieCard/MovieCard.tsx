@@ -16,7 +16,7 @@ const MovieCard: React.FC<MovieProps> = ({data, className}) => {
       </div>
       <div className={styles.card__info}>
         <h3 className={styles.card__info_title}>{data.title}</h3>
-        <p className={styles.card__info_genres}>{data.genre.split(',').join(' • ')}</p>
+        <p className={styles.card__info_genres}>{data.genre.split('|').join(' • ')}</p>
       </div>
       <div className={styles.card__rating}>{data.ratings}</div>
     </Link>

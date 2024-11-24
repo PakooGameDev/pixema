@@ -22,3 +22,4 @@ Route::post('/password/reset', [AuthController::class, 'updatePassword']);
 Route::post('/logout', [AuthController::class, 'logout']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
+Route::post('/movies/filter', [MovieController::class, 'filterMovies']);

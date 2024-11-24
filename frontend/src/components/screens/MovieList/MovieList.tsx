@@ -1,41 +1,40 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+import { observer } from 'mobx-react-lite';
 import MovieCard from '../../ui/MovieCard/MovieCard';
 import Loader from '../../ui/Loader/Loader';
 import styles from './MovieList.module.scss';
-import { IMovie } from '../../../models/IMovie';
-import MovieService from '../../../services/MovieService';
+import { movieStore } from '../../../store/MovieStore'; // Импортируйте ваше хранилище
 
 interface MovieListProps {
   type: string;
 }
 
-const MovieList: React.FC<MovieListProps> = ({ type }) => {
- 
-  const [movies, setMovies] = useState<IMovie[]>([]);
-
+const MovieList: React.FC<MovieListProps> = observer(({ type }) => {
   useEffect(() => {
-    getMovies()
+    // Получаем фильмы при монтировании компонента
+    movieStore.fetchMovies();
   }, []);
 
-  async function getMovies(){
-    try {
-      const response = await MovieService.fetchMovies();
-      setMovies(response.data); 
-    } catch (error) {
-      console.error('Error fetching movies:', error);
+  // Вызываем фильтрацию, если фильтры изменяются
+  useEffect(() => {
+    if (movieStore.filters.title || movieStore.filters.genre || movieStore.filters.country) {
+      movieStore.filterMovies();
     }
-  }
+  }, [movieStore.filters]);
 
   return (
     <div className={styles.movies__container}>
-      <div className={styles.movies__container_list}>
-        {movies.map(movie => (
-          <MovieCard key={movie.id} data={movie}/>
-        ))} 
-      </div>
-      <Loader/>
-    </div>   
+      {movieStore.loading ? (
+        <Loader />
+      ) : (
+        <div className={styles.movies__container_list}>
+          {movieStore.movies.map(movie => (
+            <MovieCard key={movie.id} data={movie} />
+          ))}
+        </div>
+      )}
+    </div>
   );
-};
+});
 
 export default MovieList;
