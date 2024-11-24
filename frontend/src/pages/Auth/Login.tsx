@@ -3,7 +3,7 @@ import React from 'react';
 import  imgPath  from "../../assets/images/logo.png";
 import styles from './Auth.module.scss'
 import SignIn from '../../components/ui/SignIn/SignIn';
-
+import { observer } from 'mobx-react-lite';
 
 const Login: React.FC = () => {
 
@@ -20,4 +20,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default observer(Login);

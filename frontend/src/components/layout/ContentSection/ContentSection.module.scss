@@ -5,9 +5,14 @@
     flex-direction: column;
     padding-left: 64px;
     padding-right: 64px;
-    overflow: hidden;
+    overflow-y: scroll;
+    scrollbar-width: none; 
+    height: 100vh;
     background-color: var(--BackgroundColor);
     transition: all 0.4s ease; 
+    &::-webkit-scrollbar{
+        display: none;
+    }
     &_lower {
         margin-top: 162px;
         display: flex;

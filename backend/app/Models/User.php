@@ -25,9 +25,10 @@ class User extends Authenticatable implements JWTSubject
         'name',
         'email',
         'password',
-        'verification_token', 
-        'remember_token',
-        'email_verified_at',
+        'activationToken', 
+        'resetToken',
+        'isActivated',
+        'resetTokenExpires',
     ];
 
     /**
@@ -37,7 +38,8 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $hidden = [
         'password',
-        'remember_token',
+        'resetToken',
+        'resetTokenExpires',
     ];
 
     /**
@@ -46,7 +48,8 @@ class User extends Authenticatable implements JWTSubject
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        'isActivated' => 'boolean',
+        'resetTokenExpires' => 'datetime'
     ];
 
 

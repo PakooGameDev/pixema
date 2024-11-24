@@ -4,7 +4,7 @@ const formatDate = (dateString: string, format: string = 'DD MMM YYYY') => {
         "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
     ];
     
-    const [day, month, year] = dateString.split('.');
+    const [year, month,day] = dateString.split('-');
     
     // Заменяем символы формата на соответствующие значения
     return format

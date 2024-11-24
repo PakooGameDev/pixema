@@ -4,9 +4,13 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    overflow-y: auto;
+    overflow-y: scroll;
+    scrollbar-width: none; 
     margin-bottom:64px;
-
+    height: 100vh;
+    &::-webkit-scrollbar{
+        display: none;
+    }
     &_list {     
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));

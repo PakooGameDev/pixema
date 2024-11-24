@@ -2,24 +2,38 @@ import React, { useState, useEffect } from 'react';
 import MovieCard from '../MovieCard/MovieCard';
 import { ReactComponent as ArrowLeft } from '../../../assets/svg/ArrowLeft.svg';
 import { ReactComponent as ArrowRight } from '../../../assets/svg/ArrowRight.svg';
+import { IMovie } from '../../../models/IMovie';
+import MovieService from '../../../services/MovieService';
 import styles from './Recommendations.module.scss';
 
-interface Movie {
-  id: string;
-  title: string;
-  genres: string[];
-  imageUrl: string;
-  rating: number;
-}
-
 interface RecommendationSliderProps {
-  movies: Movie[];
   classname?: string;
+  genre: string;
 }
 
-const Recommendations: React.FC<RecommendationSliderProps> = ({ movies, classname }) => {
+const Recommendations: React.FC<RecommendationSliderProps> = ({ classname,genre }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [slidesToShow, setSlidesToShow] = useState(4); // Начальное значение
+  const [movies, setMovies] = useState<IMovie[]>([]);
+
+
+  useEffect(() => {
+    if (genre) { // Проверяем, что id существует
+      getMovie(genre);
+    } else {
+      console.error('Genre does not exist'); // Обработка случая, когда id отсутствует
+    }
+  }, [genre]); // Добавляем id в зависимости, чтобы useEffect срабатывал при изменении id
+
+
+  async function getMovie(genre: string) {
+    try {
+      const response = await MovieService.fetchMovieByGenre(genre);
+      setMovies(response.data);
+    } catch (error) {
+      console.error('Error fetching movie:', error);
+    }
+  }
 
   const updateSlidesToShow = () => {
     const width = window.innerWidth;
@@ -70,7 +84,7 @@ const Recommendations: React.FC<RecommendationSliderProps> = ({ movies, classnam
 
         }}>
         {movies.map((movie) => (
-          <MovieCard className={styles.recommendations__card} key={movie.id} {...movie} />
+          <MovieCard className={styles.recommendations__card} key={movie.id} data={movie} />
         ))}
       </div>
     </div>

@@ -6,13 +6,28 @@
    use App\Mail\UserVerificationMail; 
    use App\Mail\PasswordResetEmail; 
 
+   interface EmailType
+   {
+       const VERIFICATION = 'verification';
+       const PASSWORD_RESET = 'password_reset';
+   }
 
    class EmailService {
-        public function sendVerificationEmail($user, $verificationUrl) {
-            Mail::to($user->email)->send(new UserVerificationMail($user, $verificationUrl));
-        }
-        public function sendPasswordResetEmail($user, $url)
-        {
-            Mail::to($user->email)->send(new PasswordResetEmail($user, $url));
+
+        public static  function sendEmail($userToRecieve, $typeOfMessage, $urlToSend) {
+            $mailClass = null;
+        
+            switch ($typeOfMessage) {
+                case EmailType::VERIFICATION:
+                    $mailClass = new UserVerificationMail($userToRecieve, $urlToSend);
+                    break;
+                case EmailType::PASSWORD_RESET:
+                    $mailClass = new PasswordResetEmail($userToRecieve, $urlToSend);
+                    break;
+                default:
+                    throw new \InvalidArgumentException("Invalid email type specified");
+            }
+        
+            Mail::to($userToRecieve->email)->send($mailClass);
         }
    }

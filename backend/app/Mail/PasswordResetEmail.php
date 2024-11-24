@@ -12,12 +12,12 @@ class PasswordResetEmail extends Mailable
     use Queueable, SerializesModels;
 
     public $user;
-    public $url;
+    public $resetUrl;
 
-    public function __construct($user, $url)
+    public function __construct($user, $resetUrl)
     {
         $this->user = $user;
-        $this->url = $url;
+        $this->resetUrl = $resetUrl;
     }
 
 
@@ -27,7 +27,7 @@ class PasswordResetEmail extends Mailable
                     ->view('emails.password_reset')
                     ->with([
                         'user' => $this->user,
-                        'url' => $this->url,
+                        'resetUrl' => $this->resetUrl,
                     ]);
     }
 }

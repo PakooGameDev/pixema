@@ -1,6 +1,7 @@
 import React from 'react';
 import MovieList from '../../components/screens/MovieList/MovieList';
 import ContentSection from '../../components/layout/ContentSection/ContentSection';
+import { observer } from 'mobx-react-lite';
 
 const Trends: React.FC = () => {
   return (
@@ -11,4 +12,4 @@ const Trends: React.FC = () => {
   );
 };
 
-export default Trends;
+export default observer(Trends);

@@ -11,17 +11,17 @@
         use Queueable, SerializesModels;
 
         public $user;
-        public $verificationUrl;
+        public $activationLink;
 
         /**
          * Create a new message instance.
          *
          * @return void
          */
-        public function __construct($user, $verificationUrl)
+        public function __construct($user, $activationLink)
         {
             $this->user = $user;
-            $this->verificationUrl = $verificationUrl;
+            $this->activationLink = $activationLink;
         }
 
         /**
@@ -31,7 +31,7 @@
          */
         public function build()
         {
-            return $this->view('emails.user_verification')
-                        ->subject('Верификация Email');
+            return $this->view('emails.user_activation') // возвращает в письме шаблон /resources/views/email/user_activation.blade.php
+                        ->subject('Верификация пользователя'); // задает тему письма
         }
     }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+
 import styles from './Header.module.scss';
 import imgPath from "../../../assets/images/logo.png";
 import imgLightPath from "../../../assets/images/pixema_light.png";
@@ -10,7 +10,6 @@ import FilterMenu from '../FilterMenu/FilterMenu';
 import { useTheme } from '../../../context/ThemeContext';
 import { useDisplay } from '../../../context/BurgerContext';
 import Sidebar from '../Sidebar/Sidebar';
-import { logout } from '../../../utils/api/auth';
 
 
 interface HeaderProps {
@@ -21,11 +20,10 @@ const Header: React.FC<HeaderProps> = ({defaultTab}) => {
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-    const [profileAction, setProfileAction] = useState('');
+
     const { display, setDisplay } = useDisplay(); // Изменено на setDisplay
     const { theme } = useTheme();
-    const navigate = useNavigate();
-    const access_token = localStorage.getItem('access_token');
+
 
     useEffect(() => {
         const handleResize = () => {
@@ -48,31 +46,6 @@ const Header: React.FC<HeaderProps> = ({defaultTab}) => {
     const handleProfileClick = () => {
         isProfileOpen ? setIsProfileOpen(false) : setIsProfileOpen(true)
     }
-
-    useEffect(() => {
-     if (!access_token) {
-      setProfileAction('Log In');
-     } else {
-      setProfileAction('Log Out');
-     }
-    }, [access_token]); // Зависимость от token
-
-
-
-    const handleLogout = async () => {
-        try {
-         if (access_token) { 
-          await logout();
-          localStorage.removeItem('access_token');
-          localStorage.removeItem('refresh_token');
-          navigate('/login');
-         } else {
-          navigate('/login'); 
-         }
-        } catch (error) {
-         console.error('Error logging out:', error);
-        }
-       };
 
     return (
         <>
@@ -116,7 +89,6 @@ const Header: React.FC<HeaderProps> = ({defaultTab}) => {
                                 <div className={styles.header__profile_logo}>AL</div>
                                 <span className={styles.header__profile_username}>Artem Lapitsky</span>
                                 <Arrow className={styles.header__profile_arrow} onClick={() => handleProfileClick()}/>
-                                <button className={isProfileOpen ? styles.logout_open : styles.logout} onClick={() => handleLogout()}>{profileAction}</button>
                             </div>
                         )}
                         <FilterMenu isOpen={isFilterOpen} onClose={() => setIsFilterOpen(false)} /> 

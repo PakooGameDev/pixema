@@ -14,8 +14,10 @@ return [
     | since RSA and ECDSA use a private/public key combo (See below).
     |
     */
-
     'secret' => env('JWT_SECRET'),
+    'access_secret' => env('JWT_ACCESS_SECRET'), // Секрет для access токена
+    'refresh_secret' => env('JWT_REFRESH_SECRET'), // Секрет для refresh токена
+    // Другие настройки...
 
     /*
     |--------------------------------------------------------------------------

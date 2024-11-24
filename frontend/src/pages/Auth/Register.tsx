@@ -3,6 +3,7 @@ import React from 'react';
 import  imgPath  from "../../assets/images/logo.png";
 import styles from './Auth.module.scss'
 import SignUp from '../../components/ui/SignUp/SignUp';
+import { observer } from 'mobx-react-lite';
 
 const Register: React.FC = () => {
 
@@ -20,4 +21,4 @@ const Register: React.FC = () => {
   );
 };
 
-export default Register;
+export default observer(Register);

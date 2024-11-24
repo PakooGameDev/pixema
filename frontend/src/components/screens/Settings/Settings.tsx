@@ -1,17 +1,37 @@
-import React, {useState} from 'react';
+import React, {useState,useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from './Settings.module.scss'
 import { transformString } from '../../../utils/format/transformString';
 import ToggleSwitch from '../../ui/ToggleSwitch/ToggleSwitch';
 import { useTheme } from '../../../context/ThemeContext';
 import Input from '../../ui/Input/Input';
+import { Context } from '../../../index';
 
 const Settings: React.FC = () => {
   const { theme } = useTheme(); // Получаем текущую тему из контекста
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+
+
+  const navigate = useNavigate();
+
+  const {store} = useContext(Context);
+
+  const handleLogout = async () => {
+    store.logout()
+    navigate('/login');
+  };
+
+  const handleNewPassword = async (e: React.FormEvent) => {
+    if (newPassword !== confirmPassword && currentPassword === '') {
+        return;
+    }
+    store.updateUserData(name, email, currentPassword, newPassword, confirmPassword)  
+  };
 
   return (
     <div className={styles.settings}>
@@ -44,8 +64,8 @@ const Settings: React.FC = () => {
             label='Password'
             type='password'
             placeholder='Your password'
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={currentPassword}
+            onChange={(e) => setCurrentPassword(e.target.value)}
           />
           <div className={styles.settings__block_reset}>
             <Input
@@ -80,8 +100,8 @@ const Settings: React.FC = () => {
         </div>
       </div>
       <div className={styles.settings__btns}>
-        <button className={styles.settings__btns_cancel}>Cancel</button>
-        <button className={styles.settings__btns_save}>Save</button>
+        <button className={styles.settings__btns_cancel} onClick={() => handleLogout()}>Log out</button>
+        <button className={styles.settings__btns_save} onClick={(e) => handleNewPassword(e)}>{'Save'}</button>
       </div> 
     </div>
   );

@@ -3,6 +3,7 @@ import React from 'react';
 import  imgPath  from "../../assets/images/logo.png";
 import styles from './Auth.module.scss'
 import Reset from '../../components/ui/Reset/Reset';
+import { observer } from 'mobx-react-lite';
 
 const ResetPage: React.FC = () => {
   return (
@@ -18,4 +19,4 @@ const ResetPage: React.FC = () => {
   );
 };
 
-export default ResetPage;
+export default observer(ResetPage);

@@ -3,6 +3,7 @@ import React from 'react';
 import  imgPath  from "../../assets/images/logo.png";
 import styles from './Auth.module.scss'
 import NewPassword from '../../components/ui/NewPassword/NewPassword';
+import { observer } from 'mobx-react-lite';
 
 const NewPasswordPage: React.FC = () => {
 
@@ -20,4 +21,4 @@ const NewPasswordPage: React.FC = () => {
   );
 };
 
-export default NewPasswordPage;
+export default observer(NewPasswordPage);
