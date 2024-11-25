@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect,useState } from 'react';
 import styles from './MoviePage.module.scss';
 import { ReactComponent as Favorites} from '../../../assets/svg/Favorites.svg';
 import { ReactComponent as Share} from '../../../assets/svg/Share.svg';
@@ -7,36 +7,79 @@ import formatDate from '../../../utils/format/FormatDate'
 import formatNumber from '../../../utils/format/FormatNumber'
 import { IMovie } from '../../../models/IMovie';
 import MovieService  from '../../../services/MovieService';
+import LoadingScreen from '../loadingScreen/LoadingScreen';
 
 interface MovieProps {
-  data: IMovie;
+  id: string;
   className?: string;
 }
 
-const MoviePage: React.FC<MovieProps> = ({data, className}) => {
+const MoviePage: React.FC<MovieProps> = ({id, className}) => {
+    const [loading, setLoading] = useState<boolean>(true); // Состояние загрузки
+    const [favorite, setFavorite] = useState<boolean>(false); // Состояние загрузки
+    const [data, setData] = useState<IMovie>({
+        id: -1,
+        title: '',
+        movie_description: '',
+        release_date: '',
+        budget: -1,
+        country: '',
+        production_companies: '',
+        actors: '',
+        director: '',
+        writers: '',
+        ratings: -1,
+        duration: -1,
+        genre: 'Comedy',
+        poster_image: '',
+      });
 
     function handleFavorite() {
-        MovieService.toggleFavorite(data.id)
-            .then(response => {
-                console.log(response.data); // Успешное сообщение
-                // Обновите состояние UI, если необходимо
-            })
-            .catch(error => {
-                console.error(error.response.data.error); // Сообщение об ошибке
-            });
+        MovieService.toggleFavorite(data.id) 
+        setFavorite(!favorite)
     }
+
+    function handleShare() {
+        const shareUrl = `https://vk.com/share.php?url=http://localhost:3000/movie/${data.id}`;
+        window.open(shareUrl, '_blank');     
+    }
+
+    useEffect(() => {
+        if (id) {
+            fetchPage(id);
+        } else {
+        console.error('Movie ID is undefined'); 
+        }
+    }, [id]); 
+    
+    async function fetchPage(id: string | number) {
+        setLoading(true); 
+        try {
+          const response = await MovieService.fetchMovieById(id);
+          setFavorite(response.data.exists)
+          setData(response.data.movie);
+        } catch (error) {
+          console.error('Error fetching movie:', error);
+        } finally {
+          setLoading(false);
+        }
+      }
+
+      if (loading) {
+        return <LoadingScreen/>; 
+      }
 
   return (
     <div className={styles.movie}>
       <div className={styles.movie__banner}>
         <div className={styles.movie__banner_poster}>
-            <img src={data.poster_image} alt={data.title} className={styles.movie__banner_img}></img>
+            <img src={data.poster_image} alt={data.title} className={styles.movie__banner_image}></img>
         </div>
         <div className={styles.movie__banner_buttons}>
             <button className={styles.movie__banner_btn} onClick={handleFavorite}>
-                <Favorites className={styles.movie__banner_icon}/>
+                {favorite ? <Favorites className={` ${styles.movie__banner_icon} ${styles.favorite}`}/> : <Favorites className={styles.movie__banner_icon}/>}
             </button>
-            <button className={styles.movie__banner_btn}>
+            <button className={styles.movie__banner_btn} onClick={handleShare}>
                 <Share className={styles.movie__banner_icon}/>
             </button>
         </div>

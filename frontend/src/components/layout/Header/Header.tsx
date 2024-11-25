@@ -46,16 +46,20 @@ const Header: React.FC<HeaderProps> = observer(({ defaultTab }) => {
     }, [setDisplay]);
 
     useEffect(() => {
-        if (store.isAuth) {
-            const responce = UserService.getUserName();
-            console.log(responce)
-            setUserName('');
-        } else {
-            setUserName('Аноним');
-            console.log('не авторизован');
-        }
-    }, []);
+        const fetchUserName = async () => {
+            try {
+                setUserName(store.user.name); // Теперь вы можете получить доступ к data
+            } catch (error) {
+                console.error('Ошибка при получении имени пользователя:', error);
+                setUserName('Аноним'); // В случае ошибки устанавливаем 'Аноним'
+            }
+        };
+
+        fetchUserName();
+    }, [store.user.name]);
     
+
+
     return (
         <>
         {display === 'mobile' ? (

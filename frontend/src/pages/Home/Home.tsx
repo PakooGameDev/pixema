@@ -7,7 +7,7 @@ const Home: React.FC = () => {
   return (
     <ContentSection 
       defaultTab="homes" 
-      ContentComponent={<MovieList type="homes" />} 
+      ContentComponent={<MovieList url="homes" />} 
     />
   );
 };

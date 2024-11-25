@@ -1,5 +1,7 @@
 @import "../../../assets/styles/mixins";
-
+.container{
+    background: var(--BackgroundColor);
+}
 .content__section { 
     display: flex;
     flex-direction: column;
@@ -8,7 +10,8 @@
     overflow-y: scroll;
     scrollbar-width: none; 
     height: 100vh;
-    background-color: var(--BackgroundColor);
+    background: var(--BackgroundColor);
+    mask-image: var(--MaskColor); 
     transition: all 0.4s ease; 
     &::-webkit-scrollbar{
         display: none;
@@ -18,7 +21,7 @@
         display: flex;
         width: 100%;
         gap: 40px;
-        
+       
         &_content {
             flex:1;
             margin-left: 368px;

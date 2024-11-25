@@ -24,7 +24,7 @@ class AuthController extends Controller
             ]);
             $userData = UserService::registration($request->name, $request->email, $request->password);
             if(!$userData) {
-                return response()->json(['error' => 'ошибка регистрации'], 404);
+                return response()->json(['error' => 'ошибка регистрации'], 422);
             }
             return response()->json($userData, 200)->withCookie(cookie('refreshToken', $userData['refreshToken'], 60 * 24 * 7, null, null, null, true, false, null));
         } catch (\Throwable $e) {
@@ -58,22 +58,23 @@ class AuthController extends Controller
         try {
             $userData = UserService::login($credentials['email'], $credentials['password']);
             if(!$userData) {
-                 return response()->json(['error' => 'Неверный email или пароль'], 401);
+                 return response()->json(['error' => 'Неверные данные или аккаунт не активирован'], 422);
             }
             return response()->json($userData, 200)->withCookie(cookie('refreshToken', $userData['refreshToken'], 60 * 24 * 7, null, null, null, true, false, null));
         } catch (ValidationException $e) {
             return response()->json(['error' => $e->errors()], 422);
         } catch (\Throwable $e) {
             return response()->json(['error' =>  $e->getMessage()], 500);
-        } catch (\Exception $e) { 
-            return response()->json(['error' =>  $e->getMessage()], 500);
-        }
+        } 
     }
 
     public function logout(Request $request)
     {
         try {
             $refreshToken = $request->cookie('refreshToken');
+            if (!$refreshToken) {
+                return response()->json(['error' => 'unauthorized'], 401);
+            }
             UserService::logout($refreshToken);
             return response()->json(['message' => 'Кука удалена'])->withoutCookie('refreshToken');
         } catch (\Throwable $e) {
@@ -86,15 +87,13 @@ class AuthController extends Controller
         try {
             $refreshToken = $request->cookie('refreshToken');
             if (!$refreshToken) {
-                return response()->json(['error' => 'Не передан токен'], 401);
+                return response()->json(['error' => 'unauthorized'], 401);
             }
             $userData = UserService::refresh($refreshToken);
             if (!$userData) {
-                return response()->json(['error' => 'Токен не найден'], 401);
+                return response()->json(['error' => 'unauthorized'], 401);
             }
             return response()->json($userData, 200)->withCookie(cookie('refreshToken', $userData['refreshToken'], 60 * 24 * 7, null, null, null, true, false, null));
-        } catch (ValidationException $e) {
-            return response()->json(['error' => $e->errors()], 422);
         } catch (\Throwable $e) {
             return response()->json(['error' =>  $e->getMessage()], 500);
         }
@@ -126,11 +125,14 @@ class AuthController extends Controller
     public function updatePassword(Request $request)
     {
         $request->validate([
-            'password' => 'required|string|min:8', // Минимальная длина пароля
-            'password_c' => 'required|string|same:password', // Проверка на совпадение с паролем
+            'password' => 'required|string|min:8',
+            'password_confirmation' => 'required|string|same:password', 
         ]);
         try {
             $userData = UserService::updatePassword($request->token,$request->password);
+            if(!$userData) {
+                return response()->json(['error' => 'Неверный токен или пароль'], 422);
+            }
             return response()->json($userData, 200)->withCookie(cookie('refreshToken', $userData['refreshToken'], 60 * 24 * 7, null, null, null, true, false, null));
         } catch(\Throwable $e) {
             return response()->json(['error' =>  $e->getMessage()], 500);
@@ -140,39 +142,41 @@ class AuthController extends Controller
 
     public function updateUserData(Request $request)
     {
-            $authorizedUser = $request->attributes->get('user');
-            
-            $userInDB = User::find($authorizedUser->data->id);
+        $userData = $request->attributes->get('user');
+        if(!$userData){
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+        // Validate the request
+        $request->validate([
+            'name' => 'sometimes|string|max:50|nullable',
+            'email' => 'sometimes|nullable|email|max:255|unique:users,email,' . $userData->data->id,
+            'currentPassword' => 'nullable|required_with:newPassword|string',
+            'newPassword' => 'sometimes|string|min:8|confirmed|nullable', 
+        ]);
 
-            // Обновляем имя, если оно передано
-            if ($request->has('name')) {
-                $request->validate(['name' => ['nullable','string', 'max:255'],]);
-                $userData = UserService::updateName($userInDB, $request->name);
-            }
+        $userInDB = User::find($userData->data->id);
 
-            // Обновляем email, если он передан
-            if ($request->has('email')) {
-                $request->validate(['email' => ['nullable','string', 'email', 'max:255', 'unique:users'],]);
-                $userData = UserService::updateEmail($userInDB, $request->email);
-            }
+        if ($request->filled('name')) {
+            $userData = UserService::updateName($userInDB, $request->name);
+        }
+        
+        if ($request->filled('email')) {
+            $userData = UserService::updateEmail($userInDB, $request->email);
+        } 
+        
+        if ($request->filled('newPassword')) {
+            $userData = UserService::updatePasswordFromPage($userInDB, $request->currentPassword, $request->newPassword);
+        }
 
-            // Обновляем пароль, если новое значение пароля передано
-            if ($request->filled('newPassword')) {
-                $request->validate([
-                    'currentPassword' => 'required_with:newPassword|string|min:8',
-                    'newPassword' => 'nullable|string|min:8', 
-                    'newPassword_c' => 'required_with:newPassword|nullable|string|same:newPassword', 
-                ]);
-                $userData = UserService::updatePasswordFromPage($userInDB, $request->currentPassword, $request->newPassword);
-            }
-
-            return response()->json($userData, 200)->withCookie(cookie('refreshToken', $userData['refreshToken'], 60 * 24 * 7, null, null, null, true, false, null));
+        return response()->json($userData, 200)->withCookie(cookie('refreshToken', $userData['refreshToken'], 60 * 24 * 7, null, null, null, true, false, null));   
     }
 
     public function getUserName(Request $request)
     {
             $authorizedUser = $request->attributes->get('user');
-            
+            if(!$authorizedUser){
+                return response()->json(['error' => 'Unauthorized'], 401);
+            }
             $userInDB = User::find($authorizedUser->data->id);
 
             return response()->json($userInDB->name, 200);

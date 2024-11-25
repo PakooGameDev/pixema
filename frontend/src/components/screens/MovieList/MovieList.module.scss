@@ -4,18 +4,26 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    overflow-y: scroll;
+
     scrollbar-width: none; 
-    margin-bottom:64px;
-    height: 100vh;
+    padding-top: 10px;
+    position: relative;
+
     &::-webkit-scrollbar{
         display: none;
     }
+    &_loader{
+        
+        position: fixed;
+        bottom: 54px;
+    }
+
     &_list {     
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
         gap: 40px;  
-        margin-bottom: 64px;     
+        margin-bottom: 64px;  
+
     }
         
         @include mobile {
@@ -31,3 +39,12 @@
         }
 }
 
+.empty{     
+    height: 100%;
+    position: absolute; /* Или relative, в зависимости от контекста */
+    top: 50%;
+    left: 50%;
+    margin-top: 100px; 
+    transform: translate(-50%, -50%); /* Центрирование */
+   
+} 

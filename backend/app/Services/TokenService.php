@@ -20,6 +20,7 @@
                     'exp' => time() + 3600, // Время истечения токена (1 час)
                     'data' => [
                         'id' => $data['id'], 
+                        'name' => $data['name'],
                         'email' =>  $data['email'],
                         'isActivated' => $data['isActivated']
                     ],
@@ -33,6 +34,7 @@
                     'exp' => time() + 604800, // Время истечения токена (7 дней)
                     'data' => [
                         'id' => $data['id'], 
+                        'name' => $data['name'],
                         'email' =>  $data['email'],
                         'isActivated' => $data['isActivated']
                     ],

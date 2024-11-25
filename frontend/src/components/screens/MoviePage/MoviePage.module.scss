@@ -4,6 +4,8 @@
     display: flex;
     gap: 42px;
     max-width: 1100px;
+    transition: all 0.1s ease-in-out;
+
     &__banner {
         min-width: 266px;
         overflow: hidden;
@@ -11,6 +13,10 @@
         flex-direction: column;
         gap:32px;
 
+        &_icon {
+             
+            fill: var(--TextColorLight);
+        }
         &_poster{
             text-align: center;
             border-radius: 10px;
@@ -18,6 +24,7 @@
             background-color: var(--Primary);
         }
         &_image {
+            border-radius: 10px;
             width: 100%;
             height: 100%;
         }
@@ -71,7 +78,7 @@
             &_info{
                 background-color: var(--Graphite);
                 border-radius: 6px;
-                color: var(--TextColorWhite);
+                color: var(--TextColor);
                 @include fontStyle(600,16px,24px);
                 padding: 2px 8px;
                 &:first-child{
@@ -114,13 +121,21 @@
                 }
                 p{
                     text-align: start;
-                    color: var(--TextColorWhite);
+                    color: var(--TextColor);
                     @include fontStyle(); 
                 }
             }
           }
 }
- 
+
+.favorite{
+    fill: var(--Primary);
+}
+
+.favorite {
+--icon-color: $favorite-color; // Override color when favorited
+}
+
 @include big-desktop2 {
    p {
     max-width: 700px;

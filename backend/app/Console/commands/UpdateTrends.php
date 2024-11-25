@@ -26,7 +26,6 @@ class UpdateTrends extends Command
             }
             $trend->previous_views = $trend->current_views ?? 0; // Установить значение по умолчанию, если null
             $trend->current_views =  0; // Увеличиваем количество текущих просмотров
-            $trend->last_updated = Carbon::now();
             $trend->save();
         }
 

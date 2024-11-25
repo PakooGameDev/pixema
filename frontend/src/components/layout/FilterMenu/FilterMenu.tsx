@@ -29,10 +29,22 @@ const FilterMenu: React.FC<FilterMenuProps> = observer(({ isOpen = true, onClose
             country,
             years,
             ratings,
-            sortBy, // Добавьте это свойство
+            sortBy, 
         });
-        movieStore.filterMovies(); // Не забудьте вызвать фильтрацию
         onClose && onClose(); // Закрываем меню фильтров после получения результатов
+    };
+
+    const handleClear = () => {
+        // Обновляем фильтры в хранилище
+        movieStore.setFilters({
+            title: '',
+            genre:[], // Преобразуем массив жанров в строку
+            country:'',
+            years:[null, null],
+            ratings: [null, null],
+            sortBy:'none', 
+        });
+        onClose && onClose(); 
     };
 
     return (
@@ -69,7 +81,7 @@ const FilterMenu: React.FC<FilterMenuProps> = observer(({ isOpen = true, onClose
                     />
                 </div>
                 <div className={styles.filter__buttons}>
-                    <button className={styles.filter__buttons_btn} onClick={() => { /* Логика очистки фильтров */ }}>Clear filter</button>
+                    <button className={styles.filter__buttons_btn} onClick={handleClear}>Clear filter</button>
                     <button className={styles.filter__buttons_btn} onClick={handleShowResults}>Show results</button>
                 </div>
             </div>

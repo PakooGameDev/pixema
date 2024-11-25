@@ -19,16 +19,16 @@ const Recommendations: React.FC<RecommendationSliderProps> = ({ classname,genre 
 
   useEffect(() => {
     if (genre) { // Проверяем, что id существует
-      getMovie(genre);
+      fetchRecommendations(genre);
     } else {
       console.error('Genre does not exist'); // Обработка случая, когда id отсутствует
     }
   }, [genre]); // Добавляем id в зависимости, чтобы useEffect срабатывал при изменении id
 
 
-  async function getMovie(genre: string) {
+  async function fetchRecommendations(genre: string) {
     try {
-      const response = await MovieService.fetchMovieByGenre(genre);
+      const response = await MovieService.fetchRecommendations(genre);
       setMovies(response.data);
     } catch (error) {
       console.error('Error fetching movie:', error);

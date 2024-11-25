@@ -8,6 +8,7 @@
   color: var(--Navigation);
   position:fixed;
   overflow: hidden;
+  margin-top: 32px;
   &.open {
     right: 0;
   } 

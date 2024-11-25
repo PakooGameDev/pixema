@@ -11,7 +11,6 @@ export default class Store {
     user = {} as IUser;
     isAuth = false;
     isLoading = false;
-
     constructor() {
         makeAutoObservable(this);
     }
@@ -59,9 +58,9 @@ export default class Store {
         }
     }
 
-    async updateUserData(name: string, email:string, currentPassword:string, newPassword:string, newPassword_c:string) {
+    async updateUserData(name: string, email:string, currentPassword:string, newPassword:string, newPassword_confirmation:string) {
         try {
-            const response = await UserService.updateUserData(name, email, currentPassword, newPassword, newPassword_c);
+            const response = await UserService.updateUserData(name, email, currentPassword, newPassword, newPassword_confirmation);
             localStorage.setItem('token', response.data.accessToken);
             this.setAuth(true)
             this.setUser(response.data.user);
@@ -88,9 +87,9 @@ export default class Store {
         }
     }
 
-    async updatePassword(token:string, newPassword:string, newPassword_c:string) {
+    async updatePassword(token:string, newPassword:string, newPassword_confirmation:string) {
         try {
-            const response = await AuthService.updatePassword(token, newPassword, newPassword_c);
+            const response = await AuthService.updatePassword(token, newPassword, newPassword_confirmation);
             localStorage.setItem('token', response.data.accessToken);
             this.setAuth(true)
             this.setUser(response.data.user);

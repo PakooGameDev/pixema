@@ -4,10 +4,11 @@ import ContentSection from '../../components/layout/ContentSection/ContentSectio
 import { observer } from 'mobx-react-lite';
 
 const Favorites: React.FC = () => {
+  
   return (
     <ContentSection 
       defaultTab="favorites" 
-      ContentComponent={<MovieList type="favorites" />} 
+      ContentComponent={<MovieList url="favorites" />} 
     />
   );
 };

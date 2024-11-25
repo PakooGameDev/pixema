@@ -15,8 +15,11 @@ const ContentSection: React.FC<ContentSectionProps> = ({ defaultTab, ContentComp
   const { display } = useDisplay();
 
   return (
-      <div className={styles.content__section}>
+    <div className={styles.container}>
         <Header defaultTab={defaultTab} />
+      <div className={styles.content__section}>
+        
+
         <div className={styles.content__section_lower}> 
           {display === 'desktop' ? <Sidebar  activeTab={defaultTab} /> : ''}
           <div className={styles.content__section_lower_content}>
@@ -24,6 +27,8 @@ const ContentSection: React.FC<ContentSectionProps> = ({ defaultTab, ContentComp
           </div>
         </div>
       </div>
+    </div>
+
 
   );
 };

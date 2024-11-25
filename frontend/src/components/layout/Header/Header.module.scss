@@ -7,18 +7,18 @@
   align-items: center;
   transition: all 0.4s ease; 
   gap: 40px;
-  padding-top: 40px;
-  padding-bottom: 56px;
   position: fixed;
   left: 0;
   top:0;
-  padding: 40px 64px 56px 64px;
-  background-color: var(--BackgroundColor);
+
+  padding: 40px 64px  20px 64px;
+
   flex:1;
   &__container{
     display: flex;
     align-items: center;
     justify-content: space-between;
+    
     gap: 41px;
     width: 1490px;
       &_sidebar{
@@ -32,8 +32,9 @@
         position:fixed;
         top: 0;
         transition: right 0.3s ease;
-        background-color: var(--BackgroundColor);;
+        background: var(--SidebarBackgroundColor);;
         padding: 60px 0;
+        margin-top: 0 !important; 
       }
   }
 
@@ -69,6 +70,7 @@
     display: flex;
     align-items: center;
     gap:20px;
+    width: 266px;
     position: relative;
     &_logo {
       min-width: 56px;

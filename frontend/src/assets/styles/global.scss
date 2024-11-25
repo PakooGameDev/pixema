@@ -6,22 +6,29 @@
 
 // подключения компонентов страницы
 body{
-    background-color: var(--BackgroundColor);
+  //  background: var(--BackgroundColor);
     font-family: 'Exo 2', sans-serif;
 }
 
 .light-theme {
-    --BackgroundColor: #FFFFFF;
-    --Graphite: #AFB2B6;
-    --Search: #FFFFFF;
-    --Dark: #d8d8d8;
-    --Primary: #7B61FF;
-    --PrimaryLight: #917CFF;
-    --TextColorWhite:#3f3d3d;
-    --TextColorLight:#686868;
-    --Error:#FF5154;
-    --RatingGreen:#00A340;
-    --RatingYellow:#F3A608;
-    --RatingOrange:#F45D2D;
+    p,h1,h2,h3,h4,h5,h6{
+        color:var(--TextColor);
+    }
+    --BackgroundColor: #ffffff; /* White background */
+    --SidebarBackgroundColor: #f9f9f9; /* Very light grey sidebar */
+    --Graphite: #343a40; /* Dark grey for text */
+    --Search: #343a40;
+    --Dark: #495057; /* Darker grey for accents */
+    --Primary: #6958c2;
+    --PrimaryLight: #a595f7;
+    --TextColorWhite: #FFFFFF;
+    --TextColor: #343a40;
+    --TextColorLight: #6c757d; /* Light grey text */
+    --Navigation: #adb5bd; /* Light grey navigation */
+    --Error: #dc3545;
+    --RatingGreen: #28a745;
+    --RatingYellow: #ffc107;
+    --RatingOrange: #fd7e14;
+    --MaskColor:linear-gradient(to top, rgb(255, 255, 255) 0%,rgba(255, 255, 255, 0.8) 80%,  rgba(255, 255, 255, 0.2) 84%,rgba(255, 255, 255, 0) 90%);
 }
 

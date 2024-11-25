@@ -9,6 +9,7 @@ import { Context } from '../../../index';
 
 const Settings: React.FC = () => {
   const { theme } = useTheme(); // Получаем текущую тему из контекста
+  const {store} = useContext(Context);
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -17,20 +18,15 @@ const Settings: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
 
 
-  const navigate = useNavigate();
-
-  const {store} = useContext(Context);
-
-  const handleLogout = async () => {
-    store.logout()
-    navigate('/login');
+  const handleSave = async (e: React.FormEvent) => {
+    store.updateUserData(name, email, currentPassword, newPassword, confirmPassword)  
   };
 
-  const handleNewPassword = async (e: React.FormEvent) => {
-    if (newPassword !== confirmPassword && currentPassword === '') {
-        return;
-    }
-    store.updateUserData(name, email, currentPassword, newPassword, confirmPassword)  
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await store.logout()
+    navigate('/login');
   };
 
   return (
@@ -101,7 +97,7 @@ const Settings: React.FC = () => {
       </div>
       <div className={styles.settings__btns}>
         <button className={styles.settings__btns_cancel} onClick={() => handleLogout()}>Log out</button>
-        <button className={styles.settings__btns_save} onClick={(e) => handleNewPassword(e)}>{'Save'}</button>
+        <button className={styles.settings__btns_save} onClick={(e) => handleSave(e)}>{'Save'}</button>
       </div> 
     </div>
   );
