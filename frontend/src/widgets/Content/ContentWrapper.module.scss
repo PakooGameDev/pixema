@@ -1,0 +1,31 @@
+@import "../../shared/assets/styles/mixins";
+
+.wrapper {
+    background: var(--BackgroundColor);
+    transition: all 0.4s ease;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    &__content {
+        mask-image: var(--MaskColor);
+        display: flex;
+        flex: 1;
+        padding: 0 64px;
+        overflow-y: auto;
+        scrollbar-width: none; 
+        margin-left: 368px;
+        &::-webkit-scrollbar {
+            display: none; 
+        }
+        @include for-desktop {
+            margin-left: 0;
+        }
+    }
+      
+    &__children {
+        flex: 1; 
+        margin-top: 140px;   
+    }
+}
+
+

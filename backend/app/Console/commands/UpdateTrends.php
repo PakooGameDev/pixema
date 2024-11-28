@@ -25,7 +25,7 @@ class UpdateTrends extends Command
                 $trend->trend_score = $this->calculateTrendScore($movie->ratings, $trend->previous_views, $trend->current_views); 
             }
             $trend->previous_views = $trend->current_views ?? 0; // Установить значение по умолчанию, если null
-            $trend->current_views =  0; // Увеличиваем количество текущих просмотров
+            $trend->current_views =  0; // обнуляем текущией просмотры
             $trend->save();
         }
 

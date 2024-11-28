@@ -1,0 +1,35 @@
+@import "../../assets/styles/mixins";
+
+.inputContainer {
+    display: flex;
+    flex-direction: column;
+    flex:1;
+  }
+  
+  .label {
+    margin-bottom: 8px;
+    @include fontStyle(600, 16px,24px);
+    color:var(--TextColorWhite);
+  }
+  
+  .input {
+    padding: 16px 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); 
+    background-color: var(--Graphite);
+    @include fontStyle();
+    color:var(--TextColorWhite);
+    &:focus {
+      border:none;
+      outline: none;
+    }
+  }
+  
+  @include mobile {
+    .label {
+      margin-bottom: 4px;
+    }
+    .input {
+      padding: 12px 14px;
+    }
+} 

@@ -1,0 +1,96 @@
+@import "../../../shared/assets/styles/mixins";
+
+.slider {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; 
+    max-width: 800px; 
+    padding-bottom: 60px;
+    &__header{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 40px;  
+        &_title{
+            @include fontStyle(500,18px,24px);
+            color: var(--TextColorLight);
+        }
+        &_controls {
+            display: flex;
+            gap: 16px;
+            .slider__arrow {
+                background: transparent;
+                border: none;
+                cursor: pointer;
+                &_icon *{
+                    fill: var(--TextColorLight);
+                }
+            }
+        }
+    }
+
+    &__content {
+        display: flex;
+        padding-bottom: 60px;
+        gap:0;
+        transition: transform 0.5s ease;
+        width: 100%; 
+    }
+}
+
+
+@media (max-width: (1560px)) {
+    .slider {
+        &__content {
+            width: 700px; 
+        }
+    }
+}
+ 
+@media (max-width: (1440px)) {
+    .slider {
+        &__content {
+            width: 540px; 
+        }
+    }
+}
+
+@media (max-width: (1280px)) {
+    .slider {
+        &__content {
+            width: 700px; 
+        }
+    }
+}
+
+@media (max-width: (1084px)) {
+    .slider {
+        &__content {
+            width: 540px; 
+        }
+    }
+}
+
+@media (max-width: (930px)) {
+    .slider {
+        &__content {
+            width: 400px; 
+        }
+    }
+}
+
+@media (max-width: (768px)) {
+    .slider {
+        &__content {
+            width:380px; 
+        }
+    }
+}
+
+@media (max-width: (460px)) {
+    .slider {
+        &__content {
+            width: 260px; 
+        }
+    }
+}

@@ -1,0 +1,16 @@
+@import "../../assets/styles/mixins";
+
+.movie__info{
+    display: flex;
+    gap: 54px;
+    h3{   
+        min-width:90px;
+        color: var(--PrimaryLight);
+        @include fontStyle(600,16px,24px); 
+    }
+    p{
+        text-align: start;
+        color: var(--TextColor);
+        @include fontStyle(); 
+    }
+}

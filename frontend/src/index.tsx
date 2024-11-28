@@ -1,13 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.scss';
-import Root from './App';
+import Root from './app/App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
-import Store from './store/store';
+import Store from './entities/Auth/Model/UserStore';
 import { createContext } from 'react';
-import { ThemeProvider } from './context/ThemeContext';
-import { DisplayProvider } from './context/BurgerContext';
+import { ThemeProvider } from './app/providers/ThemeContext';
+import { DisplayProvider } from './app/providers/BurgerContext';
 
 interface State {
   store: Store;
