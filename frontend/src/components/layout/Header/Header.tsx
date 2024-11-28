@@ -48,7 +48,7 @@ const Header: React.FC<HeaderProps> = observer(({ defaultTab }) => {
     useEffect(() => {
         const fetchUserName = async () => {
             try {
-                setUserName(store.user.name); // Теперь вы можете получить доступ к data
+                setUserName(store.user?.name); // Теперь вы можете получить доступ к data
             } catch (error) {
                 console.error('Ошибка при получении имени пользователя:', error);
                 setUserName('Аноним'); // В случае ошибки устанавливаем 'Аноним'
@@ -56,7 +56,7 @@ const Header: React.FC<HeaderProps> = observer(({ defaultTab }) => {
         };
 
         fetchUserName();
-    }, [store.user.name]);
+    }, [store.user?.name]);
     
 
 
@@ -111,7 +111,7 @@ const Header: React.FC<HeaderProps> = observer(({ defaultTab }) => {
                         </button>
                     ) : (
                         <div className={styles.header__profile}>
-                            <div className={styles.header__profile_logo}>{userName.charAt(0)}</div>
+                            <div className={styles.header__profile_logo}>{userName?.charAt(0)}</div>
                             <span className={styles.header__profile_username}>{userName}</span>
                         </div>
                     )}

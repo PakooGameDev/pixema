@@ -17,7 +17,7 @@
                     'iss' => 'pixema', // Издатель токена
                     'aud' => env('FRONTEND_URL'), // Аудитория токена
                     'iat' => time(), // Время создания токена
-                    'exp' => time() + 3600, // Время истечения токена (1 час)
+                    'exp' => time() + env('JWT_ACCESS_TOKEN_EXPIRATION_TIME'), // Время истечения токена (1 час)
                     'data' => [
                         'id' => $data['id'], 
                         'name' => $data['name'],
@@ -31,7 +31,7 @@
                     'iss' => 'pixema', // Издатель токена
                     'aud' => env('APP_URL'), // Аудитория токена
                     'iat' => time(), // Время создания токена
-                    'exp' => time() + 604800, // Время истечения токена (7 дней)
+                    'exp' => time() + env('JWT_REFRESH_TOKEN_EXPIRATION_TIME'), // Время истечения токена (7 дней)
                     'data' => [
                         'id' => $data['id'], 
                         'name' => $data['name'],
@@ -85,7 +85,7 @@
 
        public static function removeToken($refreshToken) 
        {
-            Token::where('refreshToken', $refreshToken)->first()->delete();
+            return Token::where('refreshToken', $refreshToken)->first()->delete();
        }
 
        public static function findToken($refreshToken) 

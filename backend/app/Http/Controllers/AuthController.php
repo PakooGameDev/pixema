@@ -93,7 +93,7 @@ class AuthController extends Controller
             if (!$userData) {
                 return response()->json(['error' => 'unauthorized'], 401);
             }
-            return response()->json($userData, 200)->withCookie(cookie('refreshToken', $userData['refreshToken'], 60 * 24 * 7, null, null, null, true, false, null));
+            return response()->json($userData, 200)->withCookie(cookie('refreshToken', $userData['refreshToken'], env('JWT_REFRESH_TOKEN_EXPIRATION_TIME')/60, null, null, null, true, false, null));
         } catch (\Throwable $e) {
             return response()->json(['error' =>  $e->getMessage()], 500);
         }

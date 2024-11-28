@@ -143,7 +143,7 @@
         }
 
         public static function logout($refreshToken) {  
-            TokenService::removeToken($refreshToken);
+            return TokenService::removeToken($refreshToken);
         }
 
         public static function refresh($refreshToken)

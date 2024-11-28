@@ -22,6 +22,7 @@ const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    document.title = 'Pixema';
     const checkAuth = async () => {
       if (localStorage.getItem('token')) {
         await store.checkAuth(); // Await the checkAuth promise
